@@ -4,7 +4,6 @@ const orderSchema = new mongoose.Schema({
 
     total: String,
     status: String,
-    seller: String,
     store: String,
     UserId: String,
     deliveryDate: Date,

@@ -20,11 +20,11 @@ const productSchema = new mongoose.Schema({
     },
     stock: {
         type: Number,
-        required: [true, 'El campo stock es requerido']
+        default: 0
     },
     popularity: {
         type: Number,
-        required: [true, 'El campo popularity es requerido']
+        default: 0
     },
     orderIds: [{
         type: ObjectId,

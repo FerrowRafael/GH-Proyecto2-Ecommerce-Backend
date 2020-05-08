@@ -24,6 +24,16 @@ const OrderController = {
             })
     },
 
+     // INSERT ORDER
+     addOrder(req, res) {
+        req.body.userId = req.user._id
+        Order.create(req.body)
+            .then(order => res.status(201).send(order))
+            .catch(error => {
+                console.error(error);
+                res.send(error)
+            })
+    },
 }
 
 module.exports = OrderController;

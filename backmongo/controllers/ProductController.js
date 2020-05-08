@@ -1,5 +1,6 @@
 const Product = require('../models/Product');
 
+
 const ProductController = {
 
     // GET ALL PRODUCTS
@@ -26,8 +27,9 @@ const ProductController = {
 
     // PRODUCT BY PRODUCT NAME **
     getProductByName(req, res){
-        name = req.params.name
-        Product.findOne(name)
+        name = req.params
+        console.log(req.params.name)
+        Product.find({'name': new RegExp(req.params.name, 'i')})
         .populate('userId')
         .then(product => res.send(product))
         .catch(error => {
@@ -74,7 +76,7 @@ const ProductController = {
 
     // GET PRODUCTS BEST (productos mas vendidos)
     getProductsBest(req, res) {
-        Product.find() //include equivalent
+        Product.find() 
             .then(products => res.send(products))
             .catch(error => {
                 console.error(error);
@@ -84,7 +86,7 @@ const ProductController = {
 
     // GET PRODUCTS RECENT (productos mas recientes)
     getProductsRecent(req, res) {
-        Product.find() //include equivalent
+        Product.find({"createdAt" : {"$gte": new Date("2020-05-01T00:00:00.000Z")}})
             .then(products => res.send(products))
             .catch(error => {
                 console.error(error);
@@ -94,7 +96,7 @@ const ProductController = {
 
     // GET PRODUCTS SUGGESTED (productos sugeridos)
     getProductsSuggested(req, res) {
-        Product.find() //include equivalent
+        Product.find()
             .then(products => res.send(products))
             .catch(error => {
                 console.error(error);
@@ -111,5 +113,20 @@ const ProductController = {
                 res.send(error)
             })
     },
+
+    async ProductsSearch(req, res) {
+        console.log(req.params.input)
+        try {
+            const products = await Product.find({
+                $or:[ {'name': new RegExp(req.params.input, 'i')}, {'description': new RegExp(req.params.input, 'i')}]
+                // $sort :  {  name:  < sort  order > ,  < field2 >:  < sort  order >  ...  }  
+            });
+            res.status(200).send(products);
+        } catch (err) {
+            console.log(err);
+    
+        }
+    
+    }
 }
 module.exports = ProductController
