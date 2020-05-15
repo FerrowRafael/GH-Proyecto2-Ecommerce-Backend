@@ -4,6 +4,7 @@ const { authentication, is } = require('../middleware/authentication.js')
 
 router.post('/register', UserController.register); // 1 REGISTER
 router.post('/login', UserController.login); // 2 LOGIN
+router.get('/logout', authentication, UserController.logout); // 2 LOGIN
 router.get('/info', authentication, UserController.getUserInfo); // 3 GET USER INFO
 router.get('/recover/:email', UserController.recover); // 4 RECOVER PASSWORD
 router.post('/reset', UserController.resetPassword); //5 RESET PASSWORD

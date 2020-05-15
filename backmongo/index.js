@@ -14,6 +14,7 @@ mongoose.connect('mongodb://localhost:27017/BackEndN', {
     })
     .then(() => console.log('Successfully connected to MongoDB'))
     .catch(console.error);
+    
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept,authorization");
@@ -30,11 +31,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const productsRouter = require('./routes/products');
-// const ordersRouter = require('./routes/orders');
+const ordersRouter = require('./routes/orders');
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/products', productsRouter);
-// app.use('/orders', ordersRouter);
+app.use('/orders', ordersRouter);
 
 app.listen(PORT, () => console.log('server running on port ' + PORT));

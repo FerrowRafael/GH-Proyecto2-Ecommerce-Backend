@@ -51,23 +51,24 @@ const ProductController = {
 
     // UPDATE PRODUCT
     updateProduct(req, res) {
+        console.log(req.user._id)
         req.body.userId = req.user._id
-        Product.findByIdAndUpdate(req.params._id, req.body
-            .then(product => res.status(201).send(`Product has been updated`, product))
+        Product.findByIdAndUpdate(req.params._id, req.body)
+            .then(product => res.send(product))
             .catch(error => {
                 console.error(error);
                 res.send(error)
             })
-        )
     },
 
     // DELETE PRODUCT **Revisar y añadir mensaje detallado cuando se borre
     deleteProduct(req, res) {
-        req.body.productId = req.product._id
-        Product.findByIdAndDelete(req.body)
+        console.log(req.user._id)
+        req.body.userId = req.user._id
+        Product.findByIdAndDelete(req.params._id)
             .then(product => res
                 .status(201)
-                .send({message:`Product has been deleted.`}))
+                .send({message:`Product has been deleted.`, product}))
             .catch(error => {
                 console.error(error);
                 res.send(error)
@@ -114,19 +115,57 @@ const ProductController = {
             })
     },
 
-    async ProductsSearch(req, res) {
+    // FILTRO PRODUCTOS MAYOR A MENOR
+    async ProductsSearchMay(req, res) {
         console.log(req.params.input)
         try {
             const products = await Product.find({
-                $or:[ {'name': new RegExp(req.params.input, 'i')}, {'description': new RegExp(req.params.input, 'i')}]
-                // $sort :  {  name:  < sort  order > ,  < field2 >:  < sort  order >  ...  }  
-            });
+                $or:[ {'name': new RegExp(req.params.input, 'i')}, {'description': new RegExp(req.params.input, 'i')}] 
+            })
+            .sort({ price: -1}) ;;
             res.status(200).send(products);
         } catch (err) {
             console.log(err);
-    
         }
-    
-    }
+    },
+
+    // FILTRO PRODUCTOS MENOR A MAYOR
+    async ProductsSearchMen(req, res) {
+        console.log(req.params.input)
+        try {
+            const products = await Product.find({
+                $or:[ {'name': new RegExp(req.params.input, 'i')}, {'description': new RegExp(req.params.input, 'i')}]  
+            })
+            .sort({ price: 1});
+            res.status(200).send(products);
+        } catch (err) {
+            console.log(err);
+        }
+    },
+
+     // FILTRO PRODUCTOS MAYOR A MENOR
+     async ProductsMayor(req, res) {
+        try {
+            const products = await Product.find()
+            .sort({ price: -1});
+            res.status(200).send(products);
+        } catch (err) {
+            console.log(err);
+        }
+    },
+
+    // FILTRO PRODUCTOS MENOR A MAYOR
+    async ProductsMenor(req, res) {
+        try {
+            const products = await Product.find()
+            .sort({ price: 1});
+            res.status(200).send(products);
+        } catch (err) {
+            console.log(err);
+        }
+    },
+
 }
+
+    
 module.exports = ProductController

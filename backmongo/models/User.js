@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const userSchema = new mongoose.Schema({
+const UserSchema = new mongoose.Schema({
     userName: {
         type: String,
         required: [true, 'El campo User Name es requerido']
@@ -28,8 +28,15 @@ const userSchema = new mongoose.Schema({
     },
     CityId: Number
 }, {
-    timestamps: true
+    timestamps: true,
+    toJSON: {
+        transform: (doc, ret) => {
+            delete ret.tokens;
+            delete ret.password;
+            return ret;
+        }
+    }
 });
 
-const User = mongoose.model('User', userSchema);
+const User = mongoose.model('User', UserSchema);
 module.exports = User;

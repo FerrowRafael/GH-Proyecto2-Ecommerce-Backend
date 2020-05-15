@@ -1,4 +1,4 @@
-const OrderModel = require('../models/Order.js');
+const Order = require('../models/Order.js');
 
 const OrderController = {
 
@@ -24,11 +24,35 @@ const OrderController = {
             })
     },
 
-     // INSERT ORDER
-     addOrder(req, res) {
+    // INSERT ORDER
+    async addOrder(req, res) {
+        try {
+            req.body.userId = req.user._id
+            const order =Order.create(req.body)
+                res.status(201).send(order)
+                
+            
+        } catch (error) {
+            console.error(error)
+        }
+    },
+
+    // UPDATE ORDER **Revisar .send(order)
+    updateOrder(req, res) {
         req.body.userId = req.user._id
-        Order.create(req.body)
-            .then(order => res.status(201).send(order))
+        Order.findByIdAndUpdate(req.params._id, req.body)
+            .then(order => res.status(201).send({message:"Order has been Update", order}))
+            .catch(error => {
+                console.error(error);
+                res.send(error)
+            })
+    },
+
+    // DELETE ORDER
+    deleteOrder(req, res) {
+        req.body.userId = req.user._id
+        Order.findByIdAndDelete(req.params._id)
+            .then(order => res.status(201).send({message: "Order has been delete"}))
             .catch(error => {
                 console.error(error);
                 res.send(error)

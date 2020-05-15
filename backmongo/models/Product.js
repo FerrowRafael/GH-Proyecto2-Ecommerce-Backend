@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const ObjectId = mongoose.SchemaTypes.ObjectId;
 
-const productSchema = new mongoose.Schema({
+const ProductSchema = new mongoose.Schema({
     name: {
         type: String,
         required: [true, 'El campo nombre es requerido']
@@ -15,7 +15,7 @@ const productSchema = new mongoose.Schema({
         required: [true, 'El campo precio es requerido']
     },
     image_path: {
-        type: String,
+        type: Array,
         required: [true, 'El campo ruta de imagen es requerido']
     },
     stock: {
@@ -26,6 +26,10 @@ const productSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
+    category: {
+        type: Array,
+        required: [true, 'El campo categoria es requerido']
+    },
     orderIds: [{
         type: ObjectId,
         ref: 'Order'
@@ -33,9 +37,9 @@ const productSchema = new mongoose.Schema({
     userId: {
         type: ObjectId,
         ref: 'User'
-    }
+    },
 }, {
     timestamps: true
 });
-const Product = mongoose.model('Product', productSchema);
+const Product = mongoose.model('Product', ProductSchema);
 module.exports = Product;

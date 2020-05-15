@@ -75,6 +75,7 @@ const UserController = {
 
     // LOGOUT
     logout(req, res) {
+        console.log(req.user)
         UserModel.findByIdAndUpdate(req.user._id, {
                 $pull: {
                     tokens: req.headers.authorization
