@@ -46,11 +46,13 @@ git clone https://github.com/FerrowRafael/GH-Proyecto2-Ecommerce-Backend
 
 ### Instalación dependencias
 
-- React
-- Reduc
-- redux-localstorage-simple
-- axios
-- antd
+- Express
+- Morgan
+- mongoose
+- Axios
+- Bcryptjs
+- Jsonwebtoken
+- moment
 
 ### Comenzando proyecto Express
 
