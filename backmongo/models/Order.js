@@ -4,15 +4,16 @@ const OrderSchema = new mongoose.Schema({
 
     total: String,
     status: String,
-    seller: String,
     UserId: String,
     deliveryDate: Date,
-    products: [{
-        productId:{
+    productIds: [{
+        name: String,
+        _id:{
             type: ObjectId,
             ref: 'Product',
         },
-        units: Number
+        unit: Number,
+        subtotal: Number
     }]
 }, {
     timestamps: true

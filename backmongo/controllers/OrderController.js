@@ -28,7 +28,11 @@ const OrderController = {
     async addOrder(req, res) {
         try {
             req.body.userId = req.user._id
-            const order =Order.create(req.body)
+            const order = await Order.create({
+                ...req.body, 
+                status: "pending",
+                deliveryDate: new Date(),
+                UserId: req.user._id})
                 res.status(201).send(order)
                 
             

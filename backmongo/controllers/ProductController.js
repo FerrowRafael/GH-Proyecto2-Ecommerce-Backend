@@ -15,8 +15,8 @@ const ProductController = {
 
     // PRODUCT BY PRODUCT ID
     getProductById(req, res) {
-        id = req.params._id
-        Product.findById(id)
+        _id = req.params._id
+        Product.findById(_id)
             .populate('userId')
             .then(product => res.send(product))
             .catch(error => {
@@ -27,9 +27,8 @@ const ProductController = {
 
     // PRODUCT BY PRODUCT NAME **
     getProductByName(req, res){
-        name = req.params
-        console.log(req.params.name)
-        Product.find({'name': new RegExp(req.params.name, 'i')})
+        userName = req.params.name
+        Product.find({ userName: { $regex: 'sorv', $options: 'i'}})
         .populate('userId')
         .then(product => res.send(product))
         .catch(error => {
@@ -51,7 +50,7 @@ const ProductController = {
 
     // UPDATE PRODUCT
     updateProduct(req, res) {
-        console.log(req.user._id)
+        res.send(req.user._id)
         req.body.userId = req.user._id
         Product.findByIdAndUpdate(req.params._id, req.body)
             .then(product => res.send(product))
@@ -77,7 +76,7 @@ const ProductController = {
 
     // GET PRODUCTS BEST (productos mas vendidos)
     getProductsBest(req, res) {
-        Product.find() 
+        Product.find({"popularity" : {"$gte": "600"}})
             .then(products => res.send(products))
             .catch(error => {
                 console.error(error);
@@ -87,7 +86,7 @@ const ProductController = {
 
     // GET PRODUCTS RECENT (productos mas recientes)
     getProductsRecent(req, res) {
-        Product.find({"createdAt" : {"$gte": new Date("2020-05-01T00:00:00.000Z")}})
+        Product.find({"createdAt" : {"$gte": new Date("2010-05-01T00:00:00.000Z")}})
             .then(products => res.send(products))
             .catch(error => {
                 console.error(error);

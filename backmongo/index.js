@@ -6,7 +6,7 @@ const logger = require('morgan');
 const PORT = 3001;
 const app = express();
 
-mongoose.connect('mongodb://localhost:27017/BackEndN', {
+mongoose.connect('mongodb://localhost:27017/EcommerceMEAN', {
         useNewUrlParser: true,
         useUnifiedTopology: true,
         useCreateIndex: true,

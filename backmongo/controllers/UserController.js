@@ -5,18 +5,12 @@ const transporter = require('../config/nodemailer')
 
 const UserController = {
 
-    // GET ALL USERS
-    getUsersAll(req, res) {
-        UserModel.find({})
-            .then(users => res.send(users))
-    },
-
-    // REGISTER
+    // 1 REGISTER
     async register(req, res) {
         try {
             const hash = await bcrypt.hash(req.body.password, 9); //generamos hash a partir de la contraseña
             req.body.password = hash; //sobreescribimos la propiedad password con el hash obtenido
-            req.body.role = "user";
+            req.body.role = "seller";
             const user = await UserModel.create(req.body); //creamos el usuario a partir del email y el hash suministrados en mongoDB
             res.status(201).send({
                 message: 'User successfully created',
@@ -30,7 +24,7 @@ const UserController = {
         }
     },
 
-    // LOGIN
+    // 2 LOGIN
     async login(req, res) {
         try {
             const user = await UserModel.findOne({ //buscamos el usuario por el email, ej: 'user@email.com'
@@ -68,12 +62,7 @@ const UserController = {
         }
     },
 
-    // GET USER INFO
-    getUserInfo(req, res) {
-        res.send(req.user)
-    },
-
-    // LOGOUT
+    // 3 LOGOUT
     logout(req, res) {
         console.log(req.user)
         UserModel.findByIdAndUpdate(req.user._id, {
@@ -84,7 +73,13 @@ const UserController = {
             .catch(console.error)
     },
 
-    // RECOVER PASSWORD
+    
+    // 4 GET USER INFO
+    getUserInfo(req, res) {
+        res.send(req.user)
+    },
+
+    // 5 RECOVER PASSWORD
     async recover(req, res) {
         try {
             const recoverToken = jwt.sign({email:req.params.email},'recoverSecret',{expiresIn:'48h'})
@@ -104,7 +99,7 @@ const UserController = {
         }
     },
 
-    // RESET PASSWORD
+    // 6 RESET PASSWORD
     async resetPassword(req,res){
         try {  
         const recoverToken=req.body.recoverToken;
@@ -118,7 +113,7 @@ const UserController = {
         }
     },
 
-    // UPDATE USER
+    // 7 UPDATE USER
     async update(req, res) {
         try {
             req.body.role = req.user.role; // sobreescribimos el rol del body de la request por el que hay en la db
@@ -141,7 +136,13 @@ const UserController = {
         }
     },
 
-    // DELETE USER
+    // 8 GET ALL USERS
+    getUsersAll(req, res) {
+        UserModel.find({})
+            .then(users => res.send(users))
+    },
+
+    // 9 DELETE USER
     delete(req, res) {
         let id = req.params.id;
         UserModel.findByIdAndDelete(id)
@@ -152,15 +153,7 @@ const UserController = {
             })
     },
 
-    getUsersAll(req, res) {
-        UserModel.find() //include equivalent
-            .then(users => res.send(users))
-            .catch(error => {
-                console.error(error);
-                res.send(error)
-            })
-    },
-
+    // 10 GET USER BY ID
     getUserById(req, res) {
         let id = req.params.id;
         UserModel.findById(id) //include equivalent
@@ -171,6 +164,7 @@ const UserController = {
             })
     },
 
+    // 11 GET USER BY NAME
     getUserByName(req, res) {
         let {name} = req.params.name;
         UserModel.findOne({name}) //include equivalent
