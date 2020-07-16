@@ -2,7 +2,7 @@ const Order = require('../models/Order.js');
 
 const OrderController = {
 
-    // GET ALL ORDERS
+    // 1 GET ALL ORDERS
     getOrdersAll(req, res) {
         Order.find() //include equivalent
             .then(orders => res.send(orders))
@@ -12,7 +12,7 @@ const OrderController = {
             })
     },
 
-    // ORDER BY ORDER ID **
+    // 2 ORDER BY ORDER ID 
     getOrderById(req, res) {
         Order.findById(req.params._id)
             .populate('productId')
@@ -24,7 +24,7 @@ const OrderController = {
             })
     },
 
-    // INSERT ORDER
+    // 3 ADD ORDER
     async addOrder(req, res) {
         try {
             req.body.userId = req.user._id
@@ -41,7 +41,7 @@ const OrderController = {
         }
     },
 
-    // UPDATE ORDER **Revisar .send(order)
+    // 4 UPDATE ORDER
     updateOrder(req, res) {
         req.body.userId = req.user._id
         Order.findByIdAndUpdate(req.params._id, req.body)
@@ -52,7 +52,7 @@ const OrderController = {
             })
     },
 
-    // DELETE ORDER
+    // 5 DELETE ORDER
     deleteOrder(req, res) {
         req.body.userId = req.user._id
         Order.findByIdAndDelete(req.params._id)
@@ -61,6 +61,16 @@ const OrderController = {
                 console.error(error);
                 res.send(error)
             })
+    },
+
+    // ORDER BY USER ID
+    async getOrderByUserId(req, res) {
+        try {
+            const orders = await Order.find({"UserId": req.user})
+            res.status(200).send(orders);
+        } catch (err) {
+            console.log(err);
+        }
     },
 }
 

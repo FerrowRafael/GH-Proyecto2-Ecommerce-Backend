@@ -50,7 +50,6 @@ const ProductController = {
 
     // UPDATE PRODUCT
     updateProduct(req, res) {
-        res.send(req.user._id)
         req.body.userId = req.user._id
         Product.findByIdAndUpdate(req.params._id, req.body)
             .then(product => res.send(product))

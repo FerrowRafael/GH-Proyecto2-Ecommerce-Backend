@@ -50,7 +50,7 @@ const UserController = {
             user.tokens.push(token); //añadimos el token al final del array
             await user.save(); //guarda los cambios en mongoDB
             res.send({
-                message: 'Welcome Mr ' + user.email,
+                message: 'Welcome Mr ' + user.userName,
                 user,
                 token
             });
