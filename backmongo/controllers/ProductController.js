@@ -15,8 +15,8 @@ const ProductController = {
 
     // PRODUCT BY PRODUCT ID
     getProductById(req, res) {
-        id = req.params._id
-        Product.findById(id)
+        _id = req.params._id
+        Product.findById(_id)
             .populate('userId')
             .then(product => res.send(product))
             .catch(error => {
@@ -27,9 +27,8 @@ const ProductController = {
 
     // PRODUCT BY PRODUCT NAME **
     getProductByName(req, res){
-        name = req.params
-        console.log(req.params.name)
-        Product.find({'name': new RegExp(req.params.name, 'i')})
+        userName = req.params.name
+        Product.find({ userName: { $regex: 'sorv', $options: 'i'}})
         .populate('userId')
         .then(product => res.send(product))
         .catch(error => {
@@ -52,22 +51,22 @@ const ProductController = {
     // UPDATE PRODUCT
     updateProduct(req, res) {
         req.body.userId = req.user._id
-        Product.findByIdAndUpdate(req.params._id, req.body
-            .then(product => res.status(201).send(`Product has been updated`, product))
+        Product.findByIdAndUpdate(req.params._id, req.body)
+            .then(product => res.send(product))
             .catch(error => {
                 console.error(error);
                 res.send(error)
             })
-        )
     },
 
     // DELETE PRODUCT **Revisar y añadir mensaje detallado cuando se borre
     deleteProduct(req, res) {
-        req.body.productId = req.product._id
-        Product.findByIdAndDelete(req.body)
+        console.log(req.user._id)
+        req.body.userId = req.user._id
+        Product.findByIdAndDelete(req.params._id)
             .then(product => res
                 .status(201)
-                .send({message:`Product has been deleted.`}))
+                .send({message:`Product has been deleted.`, product}))
             .catch(error => {
                 console.error(error);
                 res.send(error)
@@ -76,7 +75,7 @@ const ProductController = {
 
     // GET PRODUCTS BEST (productos mas vendidos)
     getProductsBest(req, res) {
-        Product.find() 
+        Product.find({"popularity" : {"$gte": "600"}})
             .then(products => res.send(products))
             .catch(error => {
                 console.error(error);
@@ -86,7 +85,7 @@ const ProductController = {
 
     // GET PRODUCTS RECENT (productos mas recientes)
     getProductsRecent(req, res) {
-        Product.find({"createdAt" : {"$gte": new Date("2020-05-01T00:00:00.000Z")}})
+        Product.find({"createdAt" : {"$gte": new Date("2010-05-01T00:00:00.000Z")}})
             .then(products => res.send(products))
             .catch(error => {
                 console.error(error);
@@ -114,19 +113,68 @@ const ProductController = {
             })
     },
 
-    async ProductsSearch(req, res) {
+    // FILTRO PRODUCTOS MAYOR A MENOR
+    async ProductsSearchMay(req, res) {
         console.log(req.params.input)
         try {
             const products = await Product.find({
-                $or:[ {'name': new RegExp(req.params.input, 'i')}, {'description': new RegExp(req.params.input, 'i')}]
-                // $sort :  {  name:  < sort  order > ,  < field2 >:  < sort  order >  ...  }  
-            });
+                $or:[ {'name': new RegExp(req.params.input, 'i')}, {'description': new RegExp(req.params.input, 'i')}] 
+            })
+            .sort({ price: -1}) ;;
             res.status(200).send(products);
         } catch (err) {
             console.log(err);
-    
         }
-    
-    }
+    },
+
+    // FILTRO PRODUCTOS MENOR A MAYOR
+    async ProductsSearchMen(req, res) {
+        console.log(req.params.input)
+        try {
+            const products = await Product.find({
+                $or:[ {'name': new RegExp(req.params.input, 'i')}, {'description': new RegExp(req.params.input, 'i')}]  
+            })
+            .sort({ price: 1});
+            res.status(200).send(products);
+        } catch (err) {
+            console.log(err);
+        }
+    },
+
+     // FILTRO PRODUCTOS MAYOR A MENOR
+     async ProductsMayor(req, res) {
+        try {
+            const products = await Product.find()
+            .sort({ price: -1});
+            res.status(200).send(products);
+        } catch (err) {
+            console.log(err);
+        }
+    },
+
+    // FILTRO PRODUCTOS MENOR A MAYOR
+    async ProductsMenor(req, res) {
+        try {
+            const products = await Product.find()
+            .sort({ price: 1});
+            res.status(200).send(products);
+        } catch (err) {
+            console.log(err);
+        }
+    },
+
+    // PRODUCT BY USER ID (SELLER)
+    getProductBySeller(req, res) {
+        _id = req.params._id
+        Product.findById(_id)
+            .populate('userId')
+            .then(product => res.send(product))
+            .catch(error => {
+                console.error(error);
+                res.send(error)
+            })
+    },
 }
+
+    
 module.exports = ProductController
