@@ -163,6 +163,17 @@ const ProductController = {
         }
     },
 
+    // PRODUCT BY USER ID (SELLER)
+    getProductBySeller(req, res) {
+        _id = req.params._id
+        Product.findById(_id)
+            .populate('userId')
+            .then(product => res.send(product))
+            .catch(error => {
+                console.error(error);
+                res.send(error)
+            })
+    },
 }
 
     
