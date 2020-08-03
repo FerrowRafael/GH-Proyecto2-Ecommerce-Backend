@@ -26,10 +26,7 @@ const ProductSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
-    category: {
-        type: Array,
-        required: [true, 'El campo categoria es requerido']
-    },
+    category:ObjectId,
     orderIds: [{
         type: ObjectId,
         ref: 'Order'
