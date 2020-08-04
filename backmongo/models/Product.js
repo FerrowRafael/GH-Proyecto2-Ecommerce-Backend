@@ -26,7 +26,9 @@ const ProductSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
-    category:ObjectId,
+    category:{
+        type: String
+    },
     orderIds: [{
         type: ObjectId,
         ref: 'Order'

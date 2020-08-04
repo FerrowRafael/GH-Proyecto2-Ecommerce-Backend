@@ -20,4 +20,6 @@ router.get('/searchMe/input/:input', ProductController.ProductsSearchMen);      
 router.get('/searchMayor', ProductController.ProductsMayor);
 router.get('/searchMenor', ProductController.ProductsMenor);
 
+router.get('/sellerAll/:userId', ProductController.getProductBySeller); // 11   PRODUCT BY USER ID (SELLER)
+
 module.exports = router
