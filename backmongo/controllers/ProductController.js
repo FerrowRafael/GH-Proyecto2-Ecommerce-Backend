@@ -39,6 +39,7 @@ const ProductController = {
 
     // INSERT PRODUCT
     addProduct(req, res) {
+        if (req.file) req.body.image_path = req.file.filename;
         req.body.userId = req.user._id
         Product.create(req.body)
             .then(product => res.status(201).send(product))
@@ -167,6 +168,18 @@ const ProductController = {
     getProductBySeller(req, res) {
         sellerId = req.params.userId
         Product.find({userId: sellerId})
+            // .populate('userId')
+            .then(product => res.send(product))
+            .catch(error => {
+                console.error(error);
+                res.send(error)
+            })
+    },
+
+    // PRODUCTS BY CATEGORY
+    getProductsByCategory(req, res) {
+        categorie = req.params.category
+        Product.find({category: categorie})
             // .populate('userId')
             .then(product => res.send(product))
             .catch(error => {
